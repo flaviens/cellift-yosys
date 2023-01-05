@@ -55,6 +55,7 @@ extern bool cellift_not(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int n
 extern bool cellift_neg(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
 extern bool cellift_and(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
 extern bool cellift_or(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
+extern bool cellift_mod(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
 extern bool cellift_mul(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
 extern bool cellift_pmux_large_cells(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
 extern bool cellift_pmux_small_cells(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
@@ -393,6 +394,12 @@ struct CellIFTWorker {
 				else
 					keep_current_cell = cellift_shift_imprecise(module, cell, num_taints, excluded_signals);
 
+			else if (cell->type.in(ID($mod)))
+				if (opt_conjunctive_cells_pool.find("mod") != opt_conjunctive_cells_pool.end())
+					keep_current_cell = cellift_conjunctive_two_inputs(module, cell, num_taints, excluded_signals);
+				else
+					keep_current_cell = cellift_mod(module, cell, num_taints, excluded_signals);
+
 			else if (cell->type.in(ID($mul)))
 				if (opt_conjunctive_cells_pool.find("mul") != opt_conjunctive_cells_pool.end())
 					keep_current_cell = cellift_conjunctive_two_inputs(module, cell, num_taints, excluded_signals);
@@ -523,6 +530,7 @@ struct CelliftPass : public Pass {
 		log("  -conjunctive-or\n");
 		log("  -conjunctive-mul\n");
 		log("  -conjunctive-pmux\n");
+		log("  -conjunctive-mod\n");
 		log("  -conjunctive-mux\n");
 		log("  -conjunctive-eq-ne\n");
 		log("  -conjunctive-ge\n");
