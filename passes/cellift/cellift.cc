@@ -291,7 +291,7 @@ struct CellIFTWorker {
 				else
 					keep_current_cell = cellift_mux(module, cell, num_taints, excluded_signals);
 
-			else if (cell->type.in(ID($xor), ID($_XOR_), ID($_XNOR_)))
+			else if (cell->type.in(ID($xor), ID($xnor), ID($_XOR_), ID($_XNOR_)))
 				keep_current_cell = cellift_xor(module, cell, num_taints, excluded_signals);
 
 			else if (cell->type.in(ID($eq), ID($eqx), ID($ne)))
