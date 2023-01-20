@@ -37,6 +37,7 @@ extern bool cellift_dlatch_en(RTLIL::Module *module, RTLIL::Cell *cell, unsigned
 extern bool cellift_dff(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
 extern bool cellift_dff_techmap(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
 extern bool cellift_adff(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
+extern bool cellift_aldff(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
 extern bool cellift_sdff(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
 extern bool cellift_sdff_techmap(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
 extern bool cellift_adffe(RTLIL::Module *module, RTLIL::Cell *cell, unsigned int num_taints, std::vector<string> *excluded_signals);
@@ -194,6 +195,9 @@ struct CellIFTWorker {
 
 			else if (cell->type.in(ID($adff)))
 				keep_current_cell = cellift_adff(module, cell, num_taints, excluded_signals);
+
+      else if (cell->type.in(ID($aldff)))
+				keep_current_cell = cellift_aldff(module, cell, num_taints, excluded_signals);
 
 			else if (cell->type.in(ID($sdff)))
 				keep_current_cell = cellift_sdff(module, cell, num_taints, excluded_signals);
